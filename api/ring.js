@@ -7,7 +7,7 @@ module.exports = (req, res) => {
     return;
   }
 
-  const notification = `${req.query.name || 'Alguien'} toco el timbre.`;
+  const notification = `Tocaron el timbre.`; // Changed notification text
   const accessCode = process.env.ALEXA_ACCESS_CODE;
 
   if (!accessCode) {
@@ -28,4 +28,4 @@ module.exports = (req, res) => {
     res.setHeader('Content-Type', 'text/html');
     res.end(`Redirecting to <a href="${location}">${location}</a>...`);
   });
-}
+};
