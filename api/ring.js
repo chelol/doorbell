@@ -7,7 +7,7 @@ module.exports = (req, res) => {
     return;
   }
 
-  const notification = `${req.query.name || 'Someone'} rang the doorbell.`;
+  const notification = `${req.query.name || 'Alguien'} toco el timbre.`;
   const accessCode = process.env.ALEXA_ACCESS_CODE;
 
   if (!accessCode) {
