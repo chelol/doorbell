@@ -7,7 +7,7 @@ module.exports = (req, res) => {
     return;
   }
 
-  const notification = `${req.query.name || 'Alguien'} toco el timbre.`;
+  const notification = `${req.query.name || 'Alguien'} tocó el timbre.`;
   const accessCode = process.env.ALEXA_ACCESS_CODE;
 
   if (!accessCode) {
@@ -19,7 +19,21 @@ module.exports = (req, res) => {
   url.searchParams.append('notification', notification);
   url.searchParams.append('accessCode', accessCode);
 
-  https.get(url, ({ statusCode }) => {
+  // Realiza la solicitud POST a la API de Notify My Echo
+  const request = https.request(url, ({ statusCode }) => {
+    // Si la solicitud es exitosa, emitir el sonido de timbre y el mensaje de voz
+    if ([200, 201, 202].includes(statusCode)) {
+      const speakMessage = '¡Hay alguien en la puerta!';
+      const soundUrl = new URL('https://api.notifymyecho.com/v1/NotifyMe');
+      soundUrl.searchParams.append('notification', speakMessage);
+      soundUrl.searchParams.append('accessCode', accessCode);
+
+      // Realizar una solicitud POST para emitir el mensaje de voz
+      https.request(soundUrl, (response) => {
+        console.log(`Mensaje de voz emitido: ${speakMessage}`);
+      }).end();
+    }
+    
     const location = [200, 201, 202].includes(statusCode)
       ? '/success.html'
       : '/failure.html';
@@ -28,4 +42,10 @@ module.exports = (req, res) => {
     res.setHeader('Content-Type', 'text/html');
     res.end(`Redirecting to <a href="${location}">${location}</a>...`);
   });
+
+  request.on('error', (error) => {
+    console.error(`Error al realizar la solicitud a Notify My Echo: ${error}`);
+  });
+
+  request.end();
 }
