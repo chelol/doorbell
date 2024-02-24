@@ -7,7 +7,7 @@ module.exports = (req, res) => {
     return;
   }
 
-  const notification = `Tocaron el timbre.`; // Changed notification text
+  const notificatio = "Hello World!"; // Changed notification text
   const accessCode = process.env.ALEXA_ACCESS_CODE;
 
   if (!accessCode) {
