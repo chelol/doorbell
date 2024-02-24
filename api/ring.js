@@ -17,7 +17,6 @@ module.exports = (req, res) => {
   console.log(notification);
   const url = new URL('https://api.notifymyecho.com/v1/NotifyMe');
   url.searchParams.append('notification', notification);
-  url.searchParams.append('title', Hay alguien en la puerta.);
   url.searchParams.append('accessCode', accessCode);
 
   https.get(url, ({ statusCode }) => {
